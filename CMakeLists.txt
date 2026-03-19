@@ -14,6 +14,12 @@ FetchContent_Declare(
 
 FetchContent_MakeAvailable(Catch2)
 
+
+list(APPEND CMAKE_MODULE_PATH ${catch2_SOURCE_DIR}/extras)
+# Register with CTest
+include(CTest)
+include(Catch)
+
 # main library
 add_library(cfs_lib STATIC
     src/core.cpp
@@ -25,12 +31,11 @@ target_include_directories(cfs_lib PUBLIC src)
 add_executable(cfs_tests
     tests/job_test.cpp
 )
-target_include_directories(cfs_tests PRIVATE
+target_link_libraries(cfs_tests PRIVATE
     cfs_lib
-    Catch2::Catch2WithMain # provides main() automatically
+    Catch2::Catch2WithMain
 )
 
-# Register with CTest
-include(CTest)
-include(Catch)
 catch_discover_tests(cfs_tests)
+
+set(CTEST_OUTPUT_ON_FAILURE TRUE)
