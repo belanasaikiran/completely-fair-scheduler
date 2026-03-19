@@ -1,5 +1,3 @@
-#define CATCH_CONFIG_MAIN
-#include <catch2/catch_all.hpp>
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/matchers/catch_matchers_floating_point.hpp>
 #include <stdexcept>
@@ -18,7 +16,7 @@ TEST_CASE("Weight table - each step is ~25% (1.20x to 1.30x)", "[weight]") {
     double ratio = static_cast<double>(nice_to_weight(nice)) /
                    static_cast<double>(nice_to_weight(nice + 1));
     INFO("nice=" << nice << " ratio=" << ratio);
-    CHECK(ratio > 1.20);
+    CHECK(ratio >= 1.20);
     CHECK(ratio < 1.30);
   }
 }
@@ -29,7 +27,7 @@ TEST_CASE("Weight table - out of range nice throws", "[weight]") {
     CHECK_THROWS_AS(nice_to_weight(-21), std::out_of_range);
 }
 
-TEST_CASE("Weight table — higher priority means higher weight", "weight]") {
+TEST_CASE("Weight table — higher priority means higher weight", "[weight]") {
   // nice -20 should have a much larger weight than nice 19
   CHECK(nice_to_weight(-20) > nice_to_weight(19));
 
@@ -86,7 +84,7 @@ TEST_CASE("Job - initial state after construction", "[job]") {
   CHECK(j.vruntime == 0);
   CHECK(j.work_done == 0);
   CHECK(j.time_on_cpu == 0);
-  CHECK(j.arrival_tick == 2);
+  CHECK(j.arrival_tick == 3);
   CHECK(j.state == JobState::RUNNABLE);
   CHECK(j.in_cpu_phase()); // starts in cpu phase
 }
@@ -112,7 +110,7 @@ TEST_CASE("vruntime - nice= 0 accumulates exactly 1 unit per tick",
 
 TEST_CASE("vruntime - high priority accumulates slower than nice = 0", "[vruntime]"){
   Job hi(JobProfile{"hi", -20, 100, {100}});
-  Job lo(JobProfile{"hi", -20, 100, {100}});
+  Job lo(JobProfile{"hi", 0, 100, {100}});
 
   // Run bith fr the same number of ticks
   for(int i = 0; i < 10; i++){

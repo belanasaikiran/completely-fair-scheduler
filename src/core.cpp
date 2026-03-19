@@ -16,3 +16,4 @@ void Job::print_summary() const {
             << "  turnaround=" << turnaround << " ticks"
             << "  state=" << state_str(state) << "\n";
 }
+
