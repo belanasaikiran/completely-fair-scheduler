@@ -31,6 +31,17 @@ nice 0  → weight 1024   (baseline)
 nice -1 → weight 1277   (~25% more)
 nice +1 → weight 820    (~25% less)
 ```
+
+**The Formula**
+
+Each nice level is ~1.25× heavier than the one above it (or ~0.8× lighter). The multiplier is exactly:
+
+weight[nice] = 1024 * (1/1.25)^nice
+             = 1024 * (0.8)^nice
+
+
+Starting from the baseline: nice 0 → 1024, you multiply or divide by ~1.25 for each step.
+
 Each step of nice value changes weight by ~25%. The vruntime formula then becomes:
 
 ```cpp
