@@ -4,6 +4,10 @@ project(cfs_scheduler CXX)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+# uncomment below to enable debugging
+# set(CMAKE_CXX_FLAGS_DEBUG "-g")
+# set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 include(FetchContent)
 
 FetchContent_Declare(
@@ -20,9 +24,10 @@ list(APPEND CMAKE_MODULE_PATH ${catch2_SOURCE_DIR}/extras)
 include(CTest)
 include(Catch)
 
+set(SOURCES src/main.cpp src/core.cpp)
 # main library
 add_library(cfs_lib STATIC
-    src/core.cpp
+    ${SOURCES}
 )
 
 target_include_directories(cfs_lib PUBLIC src)
